@@ -102,6 +102,12 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             }
         }
 
+        /**
+         * read 方法其实归纳起来, 可以认为做了如下工作:
+         * 1.分配 ByteBuf
+         * 2.从 SocketChannel 中读取数据
+         * 3.调用 pipeline.fireChannelRead 发送一个 inbound 事件
+         */
         @Override
         public final void read() {
             final ChannelConfig config = config();

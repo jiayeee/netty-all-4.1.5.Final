@@ -19,7 +19,7 @@ public class NettyServer {
 
     public static void main(String[] args) {
 
-        NioEventLoopGroup parentGroup = new NioEventLoopGroup(2);
+        NioEventLoopGroup parentGroup = new NioEventLoopGroup();
         NioEventLoopGroup childGroup = new NioEventLoopGroup(4);
 
         try {

@@ -578,13 +578,17 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                 // Call forceFlush which will also take care of clear the OP_WRITE once there is nothing left to write
                 ch.unsafe().forceFlush();
             }
+            // TCP 连接已建立事件
             if ((readyOps & SelectionKey.OP_CONNECT) != 0) {
+                // 需要将 OP_CONNECT 从就绪事件集中清除, 不然会一直有 OP_CONNECT 事件.
                 // remove OP_CONNECT as otherwise Selector.select(..) will always return without blocking
                 // See https://github.com/netty/netty/issues/924
                 int ops = k.interestOps();
                 ops &= ~SelectionKey.OP_CONNECT;
                 k.interestOps(ops);
 
+                // unsafe.finishConnect() 调用最后会调用到 pipeline().fireChannelActive(), 产生一个 inbound 事件,
+                // 通知 pipeline 中的各个 handler TCP 通道已建立(即 ChannelInboundHandler.channelActive 方法会被调用)
                 unsafe.finishConnect();
             }
         } catch (CancelledKeyException ignored) {

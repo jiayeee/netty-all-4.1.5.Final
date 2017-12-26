@@ -317,9 +317,9 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     final ChannelFuture initAndRegister() {
         Channel channel = null;
         try {
-            // 通过设置的 channel 的全类名反射一个 channle 对象
+            // 通过设置的 channel 的全类名反射一个 channle 对象，生成 pipeline
             channel = channelFactory.newChannel();
-            // 生成 pipeline，保存 channelConfig
+            // 保存 channelConfig，添加 channelHandler
             init(channel);
         } catch (Throwable t) {
             if (channel != null) {

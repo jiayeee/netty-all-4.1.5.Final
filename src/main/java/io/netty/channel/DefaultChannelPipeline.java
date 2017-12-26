@@ -196,10 +196,11 @@ public class DefaultChannelPipeline implements ChannelPipeline {
     public final ChannelPipeline addLast(EventExecutorGroup group, String name, ChannelHandler handler) {
         final AbstractChannelHandlerContext newCtx;
         synchronized (this) {
+            // 检查 handler 是否 被 @Sharable 标识并且已经被添加
             checkMultiplicity(handler);
-
+            // ChannelHandlerContext 持有 ChannelPipeline、EventLoopGroup、ChannelHandler
             newCtx = newContext(group, filterName(name, handler), handler);
-
+            // 把 newCtx 插到 next 和 tail 中间
             addLast0(newCtx);
 
             // If the registered is false it means that the channel was not registered on an eventloop yet.
